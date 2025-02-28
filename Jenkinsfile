@@ -55,42 +55,46 @@ pipeline {
             }
         }
 
-        stage('Wait for EC2 Instance to Prepare') {
-            steps {
-                script {
-                    // Ask for user input to decide whether to proceed with waiting
-                    def proceed = input message: 'Do you want to wait for EC2 instance to prepare?', 
-                         parameters: [
-                         booleanParam(defaultValue: true, description: 'Wait for EC2?', name: 'ProceedWait')
-                                    ]
+        // stage('Wait for EC2 Instance to Prepare') {
+        //     steps {
+        //         script {
+        //             // Ask for user input to decide whether to proceed with waiting
+        //             def proceed = input message: 'Do you want to wait for EC2 instance to prepare?', 
+        //                  parameters: [
+        //                  booleanParam(defaultValue: true, description: 'Wait for EC2?', name: 'ProceedWait')
+        //                             ]
 
-                    if (proceed) {
-                        // If the user chooses 'Yes', wait for 2 minutes
-                        echo "Waiting for 2 minutes for the EC2 instance to prepare..."
-                        sleep(time: 2, unit: 'MINUTES')  // Sleep for 2 minutes
-                    } else {
-                        echo "Skipping the wait for EC2 instance preparation."
-                    }
-                }
-            }
-        }
+        //             if (proceed) {
+        //                 // If the user chooses 'Yes', wait for 2 minutes
+        //                 echo "Waiting for 2 minutes for the EC2 instance to prepare..."
+        //                 sleep(time: 2, unit: 'MINUTES')  // Sleep for 2 minutes
+        //             } else {
+        //                 echo "Skipping the wait for EC2 instance preparation."
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('Install HTTPD on EC2') {
             steps {
-                script {
-                    // Define the path to your converted private key (.pem)
-                    def privateKeyPath = "C:\\Users\\Lenovo\\Downloads\\linuxkey.pem"  // Update with the correct path to .pem file
+        script {
+            // Define the path to your converted private key (.pem)
+            def privateKeyPath = "C:\\Users\\Lenovo\\Downloads\\linuxkey.pem"  // Update with the correct path to .pem file
 
-                    // Define the path to the Ansible playbook
-                    def playbookPath = "C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\awsinfradeployment\\httpd.yml"
+            // Define the path to the Ansible playbook
+            def playbookPath = "C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\awsinfradeployment\\httpd.yml"
 
-                    // Run the Ansible playbook to install HTTPD on the EC2 instance using the public IP
-                    bat """
-                        wsl ansible-playbook -i '${env.EC2_PUBLIC_IP},' -u ec2-user --private-key '${privateKeyPath}' '${playbookPath}'
-                    """
-                }
-            }
+            // Ensure that the EC2 public IP is properly quoted and passed
+            def ec2PublicIp = "${env.EC2_PUBLIC_IP}"
+
+            // Run the Ansible playbook to install HTTPD on the EC2 instance using the public IP
+            bat """
+                wsl ansible-playbook -i '${ec2PublicIp},' -u ec2-user --private-key '${privateKeyPath}' '${playbookPath}'
+            """
         }
+    }
+}
+
 
         stage('Manual Approval for Terraform Destroy') {
             steps {
