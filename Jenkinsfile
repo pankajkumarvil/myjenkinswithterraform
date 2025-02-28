@@ -75,6 +75,7 @@ pipeline {
         //     }
         // }
 
+
 stage('Install HTTPD on EC2') {
     steps {
         script {
