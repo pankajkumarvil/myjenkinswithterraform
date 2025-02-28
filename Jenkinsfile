@@ -76,7 +76,7 @@ pipeline {
 
                     // Run the Ansible playbook to install HTTPD on the EC2 instance using the public IP
                     bat """
-                        ansible-playbook -i ${env.EC2_PUBLIC_IP}, -u ec2-user --private-key ${privateKeyPath} ${playbookPath}
+                        ansible-playbook -i "${env.EC2_PUBLIC_IP}", -u ec2-user --private-key ${privateKeyPath} ${playbookPath}
                     """
                 }
             }
