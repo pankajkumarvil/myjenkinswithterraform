@@ -55,26 +55,25 @@ pipeline {
             }
         }
 
-         stage('Wait for EC2 Instance to Prepare') {
+        stage('Wait for EC2 Instance to Prepare') {
             steps {
-              script {
-                 // Ask for user input to decide whether to proceed with waiting
-                def proceed = input message: 'Do you want to wait for EC2 instance to prepare?', 
-                     parameters: [
-                     booleanParam(defaultValue: true, description: 'Wait for EC2?', name: 'ProceedWait')
-                                ]
+                script {
+                    // Ask for user input to decide whether to proceed with waiting
+                    def proceed = input message: 'Do you want to wait for EC2 instance to prepare?', 
+                         parameters: [
+                         booleanParam(defaultValue: true, description: 'Wait for EC2?', name: 'ProceedWait')
+                                    ]
 
-            if (proceed) {
-                // If the user chooses 'Yes', wait for 2 minutes
-                echo "Waiting for 2 minutes for the EC2 instance to prepare..."
-                sleep(time: 2, unit: 'MINUTES')  // Sleep for 2 minutes
-            } else {
-                echo "Skipping the wait for EC2 instance preparation."
+                    if (proceed) {
+                        // If the user chooses 'Yes', wait for 2 minutes
+                        echo "Waiting for 2 minutes for the EC2 instance to prepare..."
+                        sleep(time: 2, unit: 'MINUTES')  // Sleep for 2 minutes
+                    } else {
+                        echo "Skipping the wait for EC2 instance preparation."
+                    }
+                }
             }
-              }
-           }
         }
-
 
         stage('Install HTTPD on EC2') {
             steps {
@@ -87,7 +86,7 @@ pipeline {
 
                     // Run the Ansible playbook to install HTTPD on the EC2 instance using the public IP
                     bat """
-                        ansible-playbook -i "${env.EC2_PUBLIC_IP}", -u ec2-user --private-key ${privateKeyPath} ${playbookPath}
+                        wsl ansible-playbook -i '${env.EC2_PUBLIC_IP},' -u ec2-user --private-key '${privateKeyPath}' '${playbookPath}'
                     """
                 }
             }
