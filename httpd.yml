@@ -1,10 +1,10 @@
-# ---
-# - name: Installing httpd server on RedHat/CentOS machine
-#   hosts: all
-#   become: true
+---
+- name: Installing httpd server on RedHat/CentOS machine
+  hosts: all
+  become: true
 
-#   tasks:
-#     - name: Installing Apache HTTP server (httpd) on newly created EC2
-#       yum:
-#         name: httpd
-#         state: present
+  tasks:
+    - name: Installing Apache HTTP server (httpd) on newly created EC2
+      yum:
+        name: httpd
+        state: present
