@@ -60,7 +60,7 @@ pipeline {
                 script {
                     // Sleep for 1 minute (60 seconds) to allow the EC2 instance to prepare
                     echo "Waiting for 1 minute for the EC2 instance to prepare..."
-                    sleep(time: 1, unit: 'MINUTES')  // Sleep for 1 minute
+                    sleep(time: 2, unit: 'MINUTES')  // Sleep for 1 minute
                 }
             }
         }
