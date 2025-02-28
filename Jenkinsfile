@@ -55,6 +55,16 @@ pipeline {
             }
         }
 
+        stage('Wait for EC2 Instance to Prepare') {
+            steps {
+                script {
+                    // Sleep for 1 minute (60 seconds) to allow the EC2 instance to prepare
+                    echo "Waiting for 1 minute for the EC2 instance to prepare..."
+                    sleep(time: 1, unit: 'MINUTES')  // Sleep for 1 minute
+                }
+            }
+        }
+
         stage('Install HTTPD on EC2') {
             steps {
                 script {
