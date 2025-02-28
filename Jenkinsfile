@@ -75,16 +75,16 @@ pipeline {
         //     }
         // }
 
-        stage('Install HTTPD on EC2') {
-            steps {
+stage('Install HTTPD on EC2') {
+    steps {
         script {
             // Define the path to your converted private key (.pem)
-            def privateKeyPath = "C:\\Users\\Lenovo\\Downloads\\linuxkey.pem"  // Update with the correct path to .pem file
+            def privateKeyPath = "/mnt/c/Users/Lenovo/Downloads/linuxkey.pem"  // WSL path for private key
 
             // Define the path to the Ansible playbook
-            def playbookPath = "C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\awsinfradeployment\\httpd.yml"
+            def playbookPath = "/mnt/c/ProgramData/Jenkins/.jenkins/workspace/awsinfradeployment/httpd.yml"  // WSL path for playbook
 
-            // Ensure that the EC2 public IP is properly quoted and passed
+            // Define EC2 public IP
             def ec2PublicIp = "${env.EC2_PUBLIC_IP}"
 
             // Run the Ansible playbook to install HTTPD on the EC2 instance using the public IP
@@ -94,6 +94,7 @@ pipeline {
         }
     }
 }
+
 
 
         stage('Manual Approval for Terraform Destroy') {
